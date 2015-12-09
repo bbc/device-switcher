@@ -1,0 +1,12 @@
+{
+  "name": "news-switcher",
+  "version": "0.0.1",
+  "main": "index.html",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+  ],
+  "dependencies": {
+    "jquery": "1"
+  }
+}
