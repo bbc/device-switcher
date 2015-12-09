@@ -1,4 +1,4 @@
-function setUpSwitcher($switcher) {
+function setUpSwitcher(aIsDemo) {
     var hash = (function() {
             function getParameters(aParameters) {
                 var hash = window.location.hash.substring(1),
@@ -25,6 +25,17 @@ function setUpSwitcher($switcher) {
                     parameters.device = 'mobile';
                 }
 
+                if (aIsDemo) {
+                    if (parameters.url != false) {
+                        var regex = /^https?:\/\/(www\.)?(bbcnewslabs\.co\.uk|[^\#\?\/.]+\.bbc\.co(\.uk|m))(\/|\?|$)/,
+                            decodedUrl = decodeURIComponent(parameters.url);
+                        if (!regex.test(decodedUrl)) {
+                            console.log("[WARNING] In demo mode, only URLs to BBC web pages may be used as custom URLs.")
+                            parameters.url = encodeURIComponent('http://www.bbc.co.uk/news');
+                        }
+                    }
+                }
+
                 return parameters;
             }
 
@@ -32,7 +43,7 @@ function setUpSwitcher($switcher) {
                 var queryString = '#device=' + aParameters.device;
 
                 if (aParameters.url != false) {
-                    queryString += 'url=' + aParameters.url + deviceQueryString;
+                    queryString += '&url=' + aParameters.url;
                 }
 
                 return queryString;
@@ -68,7 +79,7 @@ function setUpSwitcher($switcher) {
                     url = decodeURIComponent(aUrl);
                 }
 
-                $('#device-display').attr('src', url);
+                $('.device-display').attr('src', url);
             }
 
             function update(aParameters) {
@@ -90,12 +101,12 @@ function setUpSwitcher($switcher) {
         ui.update();
     });
 
-    $switcher.find('.device-option').click(function() {
+    $('.device-option').click(function() {
         var device = $(this).attr('data-device-type');
         ui.update({ device: device });
     });
 
-    $switcher.find('.device-options-container').each(function() {
+    $('.device-options-container').each(function() {
         var $container = $(this);
             $chevronBar = $container.find('.chevron-bar');
 
@@ -110,5 +121,5 @@ function setUpSwitcher($switcher) {
 }
 
 $(document).ready(function(){
-    setUpSwitcher($('.switcher'));
+    setUpSwitcher(true);
 });

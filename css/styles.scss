@@ -6,18 +6,6 @@
   transition: $args;
 }
 
-@mixin transform($transforms) {
-       -moz-transform: $transforms;
-         -o-transform: $transforms;
-        -ms-transform: $transforms;
-    -webkit-transform: $transforms;
-          transform: $transforms;
-}
-
-@mixin rotate ($deg) {
-  @include transform(rotate(#{$deg}deg));
-}
-
 @mixin opacity($opacity) {
   opacity: $opacity;
   $opacity-ie: $opacity * 100;
@@ -44,6 +32,7 @@
 }
 
 $brandColour: #b60000;
+$headingHeight: 70px;
 
 .icon {
     font-family: 'icons';
@@ -59,8 +48,8 @@ $brandColour: #b60000;
     -moz-osx-font-smoothing: grayscale;
 }
 
-.chevron:before {
-    content: "\e600";
+.triangle-up:before {
+    content: "\e900";
 }
 
 html, body{
@@ -70,112 +59,65 @@ html, body{
 body {
     padding: 0;
     margin: 0;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-x: visible;
+    overflow-y: visible;
     background-color: #eee;
     font-family: "Helvetica Neue", Arial;
 }
-img.logo {
-    float: left;
-    height: 40px;
-    margin: 0 0 0 20px;
-}
 .heading {
+    position: fixed;
+    top: 0;
     width: 100%;
+    height: $headingHeight;
     background-color: #f8f8f8;
-    border-color: #e7e7e7;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
     .heading-brand {
         display: inline-block;
+        position: absolute;
+        height: 100%;
+        left: 15px;
         color: $brandColour;
         font-size: 18px;
-        padding: 14px 15px 15px 10px;
+        text-decoration: none;
         &:hover {
             color: $brandColour;
         }
     }
-}
-.switcher {
-    display: block;
-    position: absolute;
-    height: auto;
-    top: 20px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 50px 0 0;
-}
-.device-container {
-    margin: 0 auto;
-    position: relative;
-}
-.device-sized-container {
-    width: 100%;
-    height: 100%;
-    .device {
-        background-image: none;
+    .heading-logo {
+        position: relative;
+        top: 8px;
+        height: 50px;
     }
-    .device-display {
-        width: 100%;
-        height: 100%;
-        border: 0;
-        background-color: #fff;
-    }
-}
-
-.device-options-container {
-    display: block;
-    position: fixed;
-    z-index: 100;
-    .selected.btn {
-        @include opacity(1.0);
-    }
-    .device-option-text-container {
-        position: absolute;
-        display: table;
-        left: -115px;
-        width: 100px;
-        height: 90px;
-        text-align: right;
+    .heading-text {
+        position: relative;
+        display: inline-block;
+        left: 5px;
+        bottom: 5px;
+        font-weight: bold;
+        font-size: 24px;
+        font-family: "Montserrat", sans-serif;
     }
 }
 
 .device-option {
-    display: block;
+    $backgroundColour:  #888;
+    $hoverBackgroundColour: #555;
+    $selectedBackgroundColour: #000;
+
+    display: inline-block;
     position: relative;
-    width: 0;
-    margin: 5px 7px 45px 0;
+    width: 75px;
+    margin: 9px 0 0;
     cursor: pointer;
-    @include opacity(0.5);
-    &:hover {
-        @include opacity(0.7);
-    }
-    .device-option-img.unselected {
+    .device-option-btn {
         display: inline-block;
-    }
-    .device-option-img.selected {
-        display: none;
-    }
-    &.selected {
-        @include opacity(1.0);
-        .device-option-img.unselected {
-            display: none;
-        }
-        .device-option-img.selected {
-            display: inline-block;
-        }
-        .btn {
-            background-color: #000;
-        }
-    }
-    .btn {
-        display: inline-block;
-        background-color: #333;
-        border-radius: 15px;
-        box-shadow: 3px 3px 5px #888888;
-        width: 90px;
-        height: 90px;
-        padding: 10px;
-        margin-bottom: 0;
+        background-color: $backgroundColour;
+        border-radius: 10px;
+        width: 50px;
+        height: 50px;
+        padding: 0;
         text-align: center;
         vertical-align: middle;
         touch-action: manipulation;
@@ -184,49 +126,76 @@ img.logo {
         white-space: nowrap;
         @include vendor-prefix(user-select, none);
     }
-}
-
-.device-option-text {
-    font-size: 22px;
-    font-weight: bold;
-    color: #555;
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.device-option-img {
-    width: 100%;
-    height: 100%;
-}
-
-.device-options-background {
-    display: none;
-}
-
-.device-options-container {
-    position: absolute;
-    width: 200px;
-}
-
-body.mobile, body.tablet {
-    overflow-x: visible;
-    overflow-y: visible;
-    padding-bottom: 30px;
-    .switcher {
-        margin: 20px auto;
+    .device-option-img {
+        width: 65%;
+        @include opacity(0.5);
+        &.unselected {
+            display: inline-block;
+        }
+        &.selected {
+            display: none;
+        }
+    }
+    .device-option-text {
         position: relative;
+        @include opacity(0);
+        background-color: $hoverBackgroundColour;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 14px;
+        padding: 5px;
+        top: 10px;
+        z-index: 5000;
+        .triangle-up {
+            position: absolute;
+            top: -16px;
+            left: 0;
+            width: 100%;
+            color: $hoverBackgroundColour;
+            font-size: 25px;
+        }
     }
-    .device-options-container {
-        top: 170px;
-        left: -130px;
+    &:hover {
+        .device-option-btn {
+            background-color: $hoverBackgroundColour;
+        }
+        .device-option-img {
+            @include opacity(0.7);
+        }
+        .device-option-text {
+            @include opacity(1);
+        }
+    }
+    &.selected {
+        .device-option-btn {
+            background-color: $selectedBackgroundColour;
+        }
+        .device-option-img {
+            @include opacity(1.0);
+            &.unselected {
+                display: none;
+            }
+            &.selected {
+                display: inline-block;
+            }
+        }
+        .device-option-text {
+            background-color: $selectedBackgroundColour;
+            .triangle-up {
+                color: $selectedBackgroundColour;
+            }
+        }
     }
 }
+
+.device-case {
+    margin: 100px auto 0;
+}
+
 .mobile {
-    .device-sized-container {
+    .device-case {
         width: 438px;
         height: 920px;
-    }
-    .device {
         background-image: url('../img/iphone.png');
     }
     .device-display {
@@ -237,11 +206,9 @@ body.mobile, body.tablet {
     }
 }
 .tablet {
-    .device-sized-container {
+    .device-case {
         width: 867px;
         height: 1283px;
-    }
-    .device {
         background-image: url('../img/ipad.png');
     }
     .device-display {
@@ -251,81 +218,27 @@ body.mobile, body.tablet {
         border: 0;
     }
 }
+body.desktop {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
 .desktop {
-    .device {
+    .heading {
+        position: absolute;
+    }
+    .device-case {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        top: $headingHeight;
+        bottom: 0;
+        margin: 0;
         background-image: none;
     }
-    .device-display, .device-sized-container {
+    .device-display {
         width: 100%;
-    }
-    .switcher {
-        width: 100%;
-        margin: 0;
-        left: 0;
-        top: 50px;
-    }
-    .device-options-container {
-        top: 212px;
-        left: 115px;
-        @include transition(left 0.3s);
-        &.collapsed {
-            left: -85px;
-        }
-    }
-    .device-options-background {
-        display: block;
-        position: absolute;
-        top: -20px;
-        left: -190px;
-        width: 300px;
-        height: 345px;
-        background-color: #d5d5d5;
-        box-shadow: 0 3px 6px #888;
-        border-radius: 20px;
-        @include opacity(0.9);
-    }
-    .device-option {
-        margin-bottom: 30px;
-        right: 10px;
-        .btn {
-            width: 75px;
-            height: 75px;
-            border-radius: 10px;
-            box-shadow: 3px 3px 5px #888;
-        }
-    }
-    .device-option-text {
-        font-size: 18px;
-    }
-    .chevron-bar {
-        display: table;
-        position: relative;
-        right: -278px;
         height: 100%;
-        width: 20px;
-        background-color: #999;
-        box-shadow: -3px 0 3px #888;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-        cursor: pointer;
-        @include opacity(0.5);
-        &:hover {
-            background-color: #aaa;
-            .chevron {
-                color: #ddd;
-            }
-        }
-    }
-    .collapsed {
-        .chevron {
-            @include rotate(180);
-        }
-    }
-    .chevron {
-        display: table-cell;
-        font-size: 22px;
-        color: #555;
-        vertical-align: middle;
-        height: 100%;
+        border: none;
     }
 }
+
