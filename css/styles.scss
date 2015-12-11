@@ -1,3 +1,5 @@
+// Copyright (c) 2015 British Broadcasting Corporation
+
 @mixin transition($args...) {
   -webkit-transition: $args;
   -moz-transition: $args;
@@ -42,8 +44,6 @@ $headingHeight: 70px;
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-
-    /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }

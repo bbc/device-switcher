@@ -1,3 +1,5 @@
+// Copyright (c) 2015 British Broadcasting Corporation
+
 function setUpSwitcher(aIsDemo) {
     var hash = (function() {
             function getParameters(aParameters) {
