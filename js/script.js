@@ -1,127 +1,126 @@
 // Copyright (c) 2015 British Broadcasting Corporation
 
-function setUpSwitcher(aIsDemo) {
-    var hash = (function() {
-            function getParameters(aParameters) {
-                var hash = window.location.hash.substring(1),
-                    parametersInHash = hash.split('&'),
-                    parameters = {
-                        device: 'mobile',
-                        url: false
-                    };
+require.config({
+  paths: {
+    jquery: "../bower_components/jquery/dist/jquery.min"
+  }
+});
 
-                for (var i = 0; i < parametersInHash.length; i++) {
-                    var parameter = parametersInHash[i].split('='),
-                        parameterName = parameter[0],
-                        parameterValue = parameter[1];
-                    if (parameters.hasOwnProperty(parameterName)) {
-                        parameters[parameterName] = parameterValue;
+requirejs(
+    ['jquery'],
+    function ($) {
+        function setUpSwitcher(aIsDemo) {
+            var defaultParameters = {
+                    device: 'mobile',
+                    url: 'http://bbcnewslabs.co.uk'
+                },
+                hash = (function() {
+                    function getParameters(aParameters) {
+                        var hash = window.location.hash.substring(1),
+                            parametersInHash = hash.split('&'),
+                            parameters = { device: defaultParameters.device };
+
+                        for (var i = 0; i < parametersInHash.length; i++) {
+                            var parameter = parametersInHash[i].split('='),
+                                parameterName = parameter[0],
+                                parameterValue = parameter[1];
+                            if (parameterName == 'device' || parameterName == 'url') {
+                                parameters[parameterName] = parameterValue;
+                            }
+                        }
+
+                        if (typeof aParameters != 'undefined') {
+                            parameters = $.extend(parameters, aParameters);
+                        }
+                        if ($.inArray(parameters.device, ['mobile', 'tablet', 'desktop']) < 0) {
+                            parameters.device = defaultParameters.device;
+                        }
+                        if (parameters.hasOwnProperty('url')) {
+                            parameters.url = decodeURIComponent(parameters.url);
+                            if (aIsDemo) {
+                                var regex = /^https?:\/\/(www\.)?(bbcnewslabs\.co\.uk|[^\#\?\/.]+\.bbc\.co(\.uk|m))(\/|\?|$)/;
+                                if (!regex.test(parameters.url)) {
+                                    console.log("[WARNING] In demo mode, only URLs to BBC web pages may be used as custom URLs.")
+                                    parameters.url = 'http://www.bbc.co.uk/news';
+                                }
+                            }
+                        }
+
+                        return parameters;
                     }
-                }
 
-                if (typeof aParameters != 'undefined') {
-                    parameters = $.extend(parameters, aParameters);
-                }
+                    function update(aParameters) {
+                        var url = window.location,
+                            newUrl = url.protocol + '//' + url.host + url.pathname + '#' + $.param(aParameters);
 
-                if ($.inArray(parameters.device, ['mobile', 'tablet', 'desktop']) < 0) {
-                    parameters.device = 'mobile';
-                }
-
-                if (aIsDemo) {
-                    if (parameters.url != false) {
-                        var regex = /^https?:\/\/(www\.)?(bbcnewslabs\.co\.uk|[^\#\?\/.]+\.bbc\.co(\.uk|m))(\/|\?|$)/,
-                            decodedUrl = decodeURIComponent(parameters.url);
-                        if (!regex.test(decodedUrl)) {
-                            console.log("[WARNING] In demo mode, only URLs to BBC web pages may be used as custom URLs.")
-                            parameters.url = encodeURIComponent('http://www.bbc.co.uk/news');
+                        if(url != newUrl) {
+                            window.location = newUrl;
                         }
                     }
-                }
 
-                return parameters;
-            }
+                    return {
+                        getParameters: getParameters,
+                        update: update
+                    }
+                })(),
+                ui = (function() {
+                    function switchDevice(aDevice) {
+                        var $body = $('body');
+                        $body.removeClass();
+                        $body.addClass(aDevice);
+                        $('.device-option').removeClass('selected');
+                        $("[data-device-type='" + aDevice + "']").addClass('selected');
+                    }
 
-            function getQueryString(aParameters) {
-                var queryString = '#device=' + aParameters.device;
+                    function switchUrl(aUrl) {
+                        var $deviceDisplay = $('.device-display'),
+                            url = (typeof aUrl == 'undefined' ? defaultParameters.url : aUrl);
 
-                if (aParameters.url != false) {
-                    queryString += '&url=' + aParameters.url;
-                }
+                        if ($deviceDisplay.attr('src') != url) {
+                            $deviceDisplay.attr('src', url);
+                        }
+                    }
 
-                return queryString;
-            }
+                    function update(aParameters) {
+                        var parameters = hash.getParameters(aParameters);
 
-            function update(aParameters) {
-                var url = window.location,
-                    newUrl = url.protocol + '//' + url.host + url.pathname + getQueryString(aParameters);
+                        switchDevice(parameters.device);
+                        switchUrl(parameters.url);
+                        hash.update(parameters);
+                    }
 
-                if(url != newUrl) {
-                    window.location = newUrl;
-                }
-            }
+                    return {
+                        update: update
+                    }
+                })();
 
-            return {
-                getParameters: getParameters,
-                update: update
-            }
-        })(),
-        ui = (function() {
-            function switchDevice(aDevice) {
-                var $body = $('body');
-                $body.removeClass();
-                $body.addClass(aDevice);
-                $('.device-option').removeClass('selected');
-                $("[data-device-type='" + aDevice + "']").addClass('selected');
-            }
+            ui.update();
 
-            function switchUrl(aUrl) {
-                var url = 'http://bbcnewslabs.co.uk';
+            $(window).on('hashchange', function() {
+                ui.update();
+            });
 
-                if (aUrl != false) {
-                    url = decodeURIComponent(aUrl);
-                }
+            $('.device-option').click(function() {
+                var device = $(this).attr('data-device-type');
+                ui.update({ device: device });
+            });
 
-                $('.device-display').attr('src', url);
-            }
+            $('.device-options-container').each(function() {
+                var $container = $(this);
+                    $chevronBar = $container.find('.chevron-bar');
 
-            function update(aParameters) {
-                var parameters = hash.getParameters(aParameters);
+                $chevronBar.click(function() {
+                    if($container.hasClass('collapsed')) {
+                       $container.removeClass('collapsed');
+                    } else {
+                        $container.addClass('collapsed');
+                    }
+                });
+            });
+        }
 
-                switchDevice(parameters.device);
-                switchUrl(parameters.url);
-                hash.update(parameters);
-            }
-
-            return {
-                update: update
-            }
-        })();
-
-    ui.update();
-
-    $(window).on('hashchange', function() {
-        ui.update();
-    });
-
-    $('.device-option').click(function() {
-        var device = $(this).attr('data-device-type');
-        ui.update({ device: device });
-    });
-
-    $('.device-options-container').each(function() {
-        var $container = $(this);
-            $chevronBar = $container.find('.chevron-bar');
-
-        $chevronBar.click(function() {
-            if($container.hasClass('collapsed')) {
-               $container.removeClass('collapsed');
-            } else {
-                $container.addClass('collapsed');
-            }
+        $(document).ready(function(){
+            setUpSwitcher(true);
         });
-    });
-}
-
-$(document).ready(function(){
-    setUpSwitcher(true);
-});
+    }
+);

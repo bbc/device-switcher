@@ -1,12 +1,23 @@
 {
-  "name": "news-switcher",
+  "name": "device-switcher",
   "version": "0.0.1",
+  "homepage": "http://bbc.github.io/device-switcher",
+  "author": {
+    "name": "BBC"
+  },
   "main": "index.html",
   "ignore": [
     "**/.*",
     "bower_components"
   ],
   "dependencies": {
-    "jquery": "1"
-  }
+    "jquery": "1",
+    "requirejs": "~2.1.22"
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ]
 }
