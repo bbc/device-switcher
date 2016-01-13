@@ -12,7 +12,7 @@ Clone the **BBC Device Switcher** via the following command:
 git clone git@github.com:bbc/device-switcher.git
 ```
 
-**BBC Device Switcher** uses the [**jQuery**](https://jquery.com/) JavaScript library, which you may download using the [**Bower**](http://bower.io/) dependency management system.
+**BBC Device Switcher** uses the [**jQuery**](https://jquery.com/) and [**RequireJS**](http://requirejs.org/) JavaScript libraries, which you may download using the [**Bower**](http://bower.io/) dependency management system.
 
 Once you have installed **Bower**, execute the following command within the **BBC Device Switcher** directory to install the necessary dependencies:
 
