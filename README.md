@@ -45,3 +45,10 @@ Parameters should be specified after a hash (`#`) that follows the base News Swi
 - [`http://bbc.github.io/device-switcher/#device=tablet&url=http%3A%2F%2Fwww.bbc.co.uk%2Fnews`](http://localhost:5705/#device=tablet&url=http%3A%2F%2Fwww.bbc.co.uk%2Fnews), which will display the [BBC News](http://www.bbc.co.uk/news) website in its tablet form
 
 ***Please note:*** *in order to avoid the app being used maliciously, [the demo of the app](http://bbc.github.io/device-switcher/) has been set up to only allow URLs of BBC web-pages to be specified in the `url` parameter; any other URLs will redirect to the [BBC News](http://www.bbc.co.uk/news) website; to remove this behaviour on your own version of the Device Switcher, simply pass `false` as the value of the `aIsDemo` argument to the `setUpSwitcher` function*
+
+
+#### Fonts
+The following font files have been used (and distributed under the [SIL Open Font License](http://scripts.sil.org/OFL), 1.1) to brand the BBC Device Switcher:
+
+- **Montserrat.ttf**: Copyright (c) 2011-2012, Julieta Ulanovsky (julieta.ulanovsky@gmail.com), with Reserved Font Names 'Montserrat'
+- **Montserrat.woff2**: Copyright (c) 2011-2012, Julieta Ulanovsky (julieta.ulanovsky@gmail.com), with Reserved Font Names 'Montserrat'
